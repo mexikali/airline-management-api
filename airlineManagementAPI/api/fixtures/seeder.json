@@ -1,0 +1,72 @@
+[
+    {
+        "model": "api.airplane",
+        "pk": 1,
+        "fields": {
+            "tail_number": "TC-101",
+            "model": "Boeing 737",
+            "capacity": 180,
+            "production_year": 2015,
+            "status": true
+        }
+    },
+    {
+        "model": "api.airplane",
+        "pk": 2,
+        "fields": {
+            "tail_number": "TC-202",
+            "model": "Airbus A320",
+            "capacity": 160,
+            "production_year": 2018,
+            "status": true
+        }
+    },
+    {
+        "model": "api.flight",
+        "pk": 1,
+        "fields": {
+            "flight_number": "TK1001",
+            "departure": "Istanbul",
+            "destination": "Ankara",
+            "departure_time": "2025-02-07T08:00:00Z",
+            "arrival_time": "2025-02-07T09:30:00Z",
+            "airplane": 1
+        }
+    },
+    {
+        "model": "api.flight",
+        "pk": 2,
+        "fields": {
+            "flight_number": "TK1002",
+            "departure": "Istanbul",
+            "destination": "London",
+            "departure_time": "2025-02-07T10:00:00Z",
+            "arrival_time": "2025-02-07T14:00:00Z",
+            "airplane": 2
+        }
+    },
+    {
+        "model": "api.reservation",
+        "pk": 1,
+        "fields": {
+            "passenger_name": "Ahmet Yılmaz",
+            "passenger_email": "ahmet.yilmaz@example.com",
+            "reservation_code": "X9T3P6V2M4Y",
+            "status": true,
+            "created_at": "2025-02-06T12:00:00Z",
+            "flight": 1
+        }
+    },
+    {
+        "model": "api.reservation",
+        "pk": 2,
+        "fields": {
+            "passenger_name": "Elif Demir",
+            "passenger_email": "elif.demir@example.com",
+            "reservation_code": "A7F2G8H1J5K",
+            "status": false,
+            "created_at": "2025-02-06T13:00:00Z",
+            "flight": 2
+        }
+    }
+]
