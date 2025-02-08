@@ -30,3 +30,36 @@ class ReservationViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, 200)
         except Reservation.DoesNotExist:
             return Response({"error": "Flight not found"}, 404)
+    
+
+    # POST /reservations/ (Yeni bir rezervasyon ekle)
+    def create(self, request):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, 201)
+        return Response(serializer.errors, 400)
+    
+
+    # PATCH /reservations/{id}/ (Bir rezervasyonun belirli bir alanını güncelle)
+    def partial_update(self, request, pk=None):
+        try:
+            reservation = Reservation.objects.get(pk=pk)
+        except Reservation.DoesNotExist:
+            return Response({"error": "Reservation not found"}, 404)
+        
+        serializer = self.get_serializer(reservation, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, 200)
+        return Response(serializer.errors, 400)
+
+
+    # DELETE /reservations/{id}/ (Belirli bir rezervasyonu sil)
+    def destroy(self, request, pk=None):
+        try:
+            reservation = Reservation.objects.get(pk=pk)
+            reservation.delete()
+            return Response({"message": "Reservation deleted"}, 204)
+        except Reservation.DoesNotExist:
+            return Response({"error": "Reservation not found"}, 404)
