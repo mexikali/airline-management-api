@@ -1,6 +1,8 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from django.db.models import Q
+from datetime import datetime
 from api.models import Flight, Reservation
 from api.serializers import FlightSerializer, ReservationSerializer
 
@@ -10,8 +12,46 @@ class FlightViewSet(viewsets.ModelViewSet):
 
     # Tüm uçuşları listeleme (GET /flights/)
     def list(self, request):
+        # Query parametrelerini al
+        departure_location = request.query_params.get('departure_location', None)
+        destination_location = request.query_params.get('destination_location', None)
+        departure_date = request.query_params.get('departure_date', None)
+        arrival_date = request.query_params.get('arrival_date', None)
+        
+        # Tüm uçuşları al
         flights = self.get_queryset()
+        
+        # Q nesnesi ile dinamik filtreleme
+        filters = Q()
+        
+        if departure_location:
+            filters &= Q(departure__iexact=departure_location)
+        if destination_location:
+            filters &= Q(destination__iexact=destination_location)
+        
+        if departure_date:
+            try:
+                departure_date = datetime.strptime(departure_date, "%d-%m-%Y")
+                filters &= Q(departure_time__date=departure_date)
+            except ValueError:
+                return Response({"error": "Invalid departure_date format. Use DD-MM-YYYY."}, 
+                                400)
+
+        if arrival_date:
+            try:
+                arrival_date = datetime.strptime(arrival_date, "%d-%m-%Y")
+                filters &= Q(arrival_time__date=arrival_date)
+            except ValueError:
+                return Response({"error": "Invalid arrival_date format. Use DD-MM-YYYY."}, 
+                                400)
+
+        # Filtreleri uygula
+        flights = flights.filter(filters)
+        
+        # Serializer ile veriyi hazırla
         serializer = self.get_serializer(flights, many=True)
+        
+        # Response döndür
         return Response(serializer.data, 200)
 
 
