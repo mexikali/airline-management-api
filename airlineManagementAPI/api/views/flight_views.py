@@ -1,11 +1,3 @@
-"""from django.shortcuts import render
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
-
-@api_view(['GET'])
-def flight_view(request):
-    return Response({"message": "Flight View"})"""
-
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action

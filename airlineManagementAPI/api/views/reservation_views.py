@@ -1,16 +1,8 @@
-"""from django.shortcuts import render
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
-
-@api_view(['GET'])
-def reservation_view(request):
-    return Response({"message": "Reservation View"})"""
-
 from rest_framework import viewsets
 from rest_framework.response import Response
-from rest_framework import status
-from api.models import Reservation
+from api.models import Reservation, Flight
 from api.serializers import ReservationSerializer
+from api.utils import get_remaining_seats
 
 class ReservationViewSet(viewsets.ModelViewSet):
     queryset = Reservation.objects.all()
@@ -34,10 +26,25 @@ class ReservationViewSet(viewsets.ModelViewSet):
 
     # POST /reservations/ (Yeni bir rezervasyon ekle)
     def create(self, request):
+        
+        flight_id = request.data.get("flight")  # Gelen JSON'dan uçuş ID'sini al
+        
+        if not flight_id:
+            return Response({"error": "Flight ID is required."}, 400)
+        
+        capacity = get_remaining_seats(flight_id=flight_id)
+        
+        if capacity == -1:
+            return Response({"error": "Flight not found."}, 404)
+        elif capacity == 0:
+            return Response({"error": "No available seats for this flight."}, 400)
+
+        # Kapasite uygunsa rezervasyonu kaydet
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, 201)
+
         return Response(serializer.errors, 400)
     
 
@@ -48,6 +55,13 @@ class ReservationViewSet(viewsets.ModelViewSet):
         except Reservation.DoesNotExist:
             return Response({"error": "Reservation not found"}, 404)
         
+        if "flight" in request.data:
+            capacity = get_remaining_seats(flight_id=request.data.get("flight"))
+            if capacity == -1:
+                return Response({"error": "Flight not found."}, 404)
+            elif capacity == 0:
+                return Response({"error": "No available seats for this flight."}, 400)
+
         serializer = self.get_serializer(reservation, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()

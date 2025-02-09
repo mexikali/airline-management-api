@@ -1,6 +1,5 @@
 from django.db import models
 from unique_code import generate_unique_code
-import datetime
 
 class Airplane(models.Model):
     tail_number = models.CharField(max_length=50)
@@ -26,13 +25,11 @@ class Reservation(models.Model):
     passenger_email = models.CharField(max_length=150)
     reservation_code = models.CharField(max_length=11, unique=True, blank=True)
     status = models.BooleanField()
-    created_at = models.DateTimeField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     flight = models.ForeignKey(Flight, on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs): 
         self.reservation_code = generate_unique_code()
         while Reservation.objects.filter(reservation_code=self.reservation_code).exists():
                 self.reservation_code = generate_unique_code()
-        
-        self.created_at = datetime.datetime.now()
         super().save(*args, **kwargs)
