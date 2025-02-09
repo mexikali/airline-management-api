@@ -1,5 +1,7 @@
 # Airline Management API
+## Project Overview
 
+The Airline Management API allows users to manage flight schedules, reservations, and passenger information.
 ## Requirements
 
 - Python 3.x
@@ -41,8 +43,11 @@
    HOST_USER=
    HOST_PASSWORD=
    ```
-
-5. Apply migrations:
+5. Create Database
+   ```
+   python manage.py init_db
+   ```
+6. Apply migrations:
    ```sh
    python manage.py migrate
    ```
@@ -56,12 +61,12 @@
     python manage.py loaddata airlineManagementAPI/api/fixtures/seeder.json
     ```
 
-6. Create a superuser:
+7. Create a superuser:
    ```sh
    python manage.py createsuperuser
    ```
 
-7. Start the development server:
+8. Start the development server:
    ```sh
    python manage.py runserver
    ```
@@ -78,7 +83,32 @@ To enable email functionality, update the following setting in `settings.py`:
   ```python
   EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
   ```
+## Usage
 
+To interact with the API, use tools like Postman or cURL. Below are some example requests:
+
+- **Retrieve all flights:**
+  ```sh
+  GET /api/flights/
+  ```
+- **Filter flights by departure, arrival location, and date:**
+  ```sh
+  GET /api/flights/?departure_location=NYC&arrival_location=LAX&departure_date=2025-02-10
+  ```
+- **Create a reservation:**
+  ```sh
+  POST /api/reservations/
+  Content-Type: application/json
+  {
+      "flight": 1,
+      "passenger": "John Doe",
+      "email": "johndoe@example.com"
+  }
+  ```
+- **Retrieve reservations for a flight:**
+  ```sh
+  GET /api/flights/1/reservations/
+  ```
 ## API Documentation
 
 The following endpoints are available:
