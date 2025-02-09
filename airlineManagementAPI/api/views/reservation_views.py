@@ -3,6 +3,9 @@ from rest_framework.response import Response
 from api.models import Reservation, Flight
 from api.serializers import ReservationSerializer
 from api.utils import get_remaining_seats
+from airlineManagementAPI.views import send_email
+from django.template.loader import render_to_string
+
 
 class ReservationViewSet(viewsets.ModelViewSet):
     queryset = Reservation.objects.all()
@@ -42,7 +45,25 @@ class ReservationViewSet(viewsets.ModelViewSet):
         # Kapasite uygunsa rezervasyonu kaydet
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            reservation = serializer.save()
+
+            # Flight ve Reservation nesnelerinden gerekli verileri al
+            flight = reservation.flight
+            
+            # HTML içeriğini render et
+            html_content = render_to_string(
+                'email/confirmation_email.html',  # Şablon yolu
+                {
+                    'passenger_name': request.data.get('passenger_name'),
+                    'reservation_code': reservation.reservation_code,
+                    'flight_number': flight.flight_number,
+                    'departure_location': flight.departure,
+                    'departure_time': flight.departure_time.strftime('%d-%m-%Y %H:%M'),
+                    'destination_location': flight.destination,
+                    'destination_time': flight.arrival_time.strftime('%d-%m-%Y %H:%M'),
+                }
+            )
+            send_email("Reservation Confirmation", html_content, [request.data.get("passenger_email")])
             return Response(serializer.data, 201)
 
         return Response(serializer.errors, 400)

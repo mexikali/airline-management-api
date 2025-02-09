@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservation Confirmation</title>
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0;">
+    <div style="max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px;">
+        <div style="font-size: 24px; font-weight: bold; margin-bottom: 20px;">
+            Reservation Confirmation
+        </div>
+        <div style="margin-bottom: 20px;">
+            <p>Dear <strong>{{ passenger_name }}</strong>,</p>
+            <p>Your flight reservation has been successfully confirmed. Below are the details of your reservation:</p>
+            <ul style="list-style-type: none; padding: 0;">
+                <li><strong>Reservation Code:</strong> {{ reservation_code }}</li>
+                <li><strong>Flight Number:</strong> {{ flight_number }}</li>
+                <li><strong>Departure:</strong> {{ departure_location }} at {{ departure_time }}</li>
+                <li><strong>Destination:</strong> {{ destination_location }} at {{ destination_time }}</li>
+            </ul>
+            <p>If you have any questions or need further assistance, please feel free to contact us.</p>
+        </div>
+        <div style="font-size: 14px; color: #777; margin-top: 20px;">
+            <p>Thank you for choosing us for your travel needs.</p>
+            <p>Best regards,</p>
+            <p><strong>Your Airline Team</strong></p>
+        </div>
+    </div>
+</body>
+</html>

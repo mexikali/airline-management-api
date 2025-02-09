@@ -60,7 +60,9 @@ ROOT_URLCONF = 'airlineManagementAPI.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            BASE_DIR / 'templates',
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -131,3 +133,10 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = env('HOST')  
+EMAIL_PORT = env.int('PORT') 
+EMAIL_USE_TLS = env.bool('USE_TLS') 
+EMAIL_HOST_USER = env('HOST_USER')  
+EMAIL_HOST_PASSWORD = env('HOST_PASSWORD')   
