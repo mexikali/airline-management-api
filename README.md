@@ -58,7 +58,7 @@ The Airline Management API allows users to manage flight schedules, reservations
 
     To load the dummy data, run the following command:
     ```sh
-    python manage.py loaddata airlineManagementAPI/api/fixtures/seeder.json
+    python manage.py loaddata seeder.json
     ```
 
 7. Create a superuser:
